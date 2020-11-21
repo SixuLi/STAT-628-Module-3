@@ -69,7 +69,6 @@ ui = shinyUI(
                                          sidebarLayout(sidebarPanel(
                                            #selectInput function
                                            selectInput("restaurant","Please Select Restaurant:",business_tag),uiOutput("a"),uiOutput("b")),
-                                           uiOutput("github"),
                                            mainPanel(
                                              #show the result in each panel
                                              tabsetPanel(tabPanel("Data Illustrate",DTOutput("DT")),tabPanel("Distribution of Stars",plotOutput("plot1")),
