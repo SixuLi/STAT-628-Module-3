@@ -65,19 +65,6 @@ server = function(input, output, session) {
     selectInput("city","Please Select City:",c("ALL",Pass()[Pass()$state==input$state,]$city))
   })
   
-  url1 <- a('--',"14 Ways to Burn Fat Fast!", href="https://www.healthline.com/nutrition/best-ways-to-burn-fat")
-  output$reduce <- renderUI({
-    tagList( url1)
-  })
-  
-  url2 <- a("How to Take Accurate Girth Measurements?", href="http://business.fit/how-take-accurate-girth-measurements/")
-  output$measure <- renderUI({
-    tagList('--',url2)
-  })
-  
-  url3 = a("How to Measure a Bicep?",hrep = 'https://www.livestrong.com/article/491858-how-to-measure-a-bicep/')
-  output$m_bicep <- renderUI({tagList('--',url3)})
-  
   #output the table 
   output$DT <- renderDT({
     if(input$state=="ALL"&input$city=="ALL"){
