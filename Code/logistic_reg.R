@@ -29,3 +29,4 @@ Test(reviews.glm, data_test)
 # Obtain coefficients
 coefficients <- data.frame("word"=names(coefficients(reviews.glm)),
                            "coef" = coefficients(reviews.glm))
+# 
