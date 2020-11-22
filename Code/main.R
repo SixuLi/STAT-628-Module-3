@@ -78,6 +78,7 @@ fast_food_reviews <- McDonalds_reviews %>%
   full_join(Wendys_reviews) %>%
   full_join(Shake_shack_reviews)
 
+#fast_food_reviews <- rbind(McDonalds_reviews,Burger_king_reviews,Five_guys_reviews,Wendys_reviews,Shake_shack_reviews)
 # Change plural to single
 fast_food_reviews$text <- gsub("?s\\b", "", fast_food_reviews$text)
 
