@@ -1,19 +1,20 @@
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(stringr)
-library(lubridate)
-library(wordcloud)
+#library(lubridate)
 library(tidytext)
 library(DT)
-library(leaflet)
+#library(leaflet)
 library(textcat)
 library(forcats)
 library(pacman)
 library(tm)
 library(SnowballC)
-library(e1071)
 library(glmnet)
-p_load_gh('hrbrmstr/pluralize')
-p_load(quanteda)
+library(jsonlite)
+library(caret)
+#p_load_gh('hrbrmstr/pluralize')
+#p_load(quanteda)
 
 rm(list = ls())
 
@@ -21,8 +22,10 @@ fillColor = "#FFA07A"
 fillColor2 = "#F1C40F"
 
 # Read the data
-reviews <- read_csv('Data/review_city.csv')
-business <- read_csv('Data/business_city.csv')
+# reviews <- read_csv('Data/review_city.csv')
+# business <- read_csv('Data/business_city.csv')
+reviews <- stream_in(file("Data/review_city.json"), pagesize = 272024)
+business <- stream_in(file("Data/business_city.json"), pagesize = 36327)
 
 business <- business %>%
   select(business_id, name, address, city, state, postal_code,
