@@ -1,36 +1,33 @@
 #rm(list=ls())
 # import package
-library(shiny)
-library(shinydashboard)
-library(leafletCN)
-library(leaflet)
-library(openxlsx)
 library(DT)
+library(leaflet)
+library(shiny)
 library(dplyr)
-library(ggradar)
-library(reshape)
-library(recharts)
-library(plyr)
 library(readr)
+library(tidytext)
+library(ggplot2)
+library(tidyr)
+library(forcats)
 
 #set working directory
 #setwd("")
 
 # import data
-business <- read_csv("business_city.csv")
+#business <- read_csv("business_city.csv")
 # set restaurant name
 business_tag <- c("McDonald's","Burger King","Five Guys","Wendy's","Shake Shack")
 # choose business name 
-business <- business[business$name%in%business_tag,]
+#business <- business[business$name%in%business_tag,]
 # choose variable
-business <- business %>%
-  select(business_id, name, address, city, state, postal_code,
-         stars, review_count, is_open, categories,longitude,latitude)
+#business <- business %>%
+#  select(business_id, name, address, city, state, postal_code,
+#         stars, review_count, is_open, categories,longitude,latitude)
 # The business result data
-review_business <- business
+#review_business <- business
 
 #######Find origin text#######################
-mystopwords <- tibble(word = c("bk", "mcdonald", "thru",
+#mystopwords <- tibble(word = c("bk", "mcdonald", "thru",
                                "morning", "breakfast",
                                "burgerking", "soul",
                                "xt", "snow", "passenger",
@@ -41,15 +38,24 @@ mystopwords <- tibble(word = c("bk", "mcdonald", "thru",
                                "add", "talk", "heard", "suck", "lunch", "shame",
                                "guy", "wendy"))
 #import data
-fast_food_reviews <- read_csv("review_city.csv") 
+#fast_food_reviews <- read_csv("review_city.csv") 
 #choose business id
-fast_food_reviews <- fast_food_reviews[fast_food_reviews$business_id%in%business$business_id,] 
+#fast_food_reviews <- fast_food_reviews[fast_food_reviews$business_id%in%business$business_id,] 
 #join business name
-fast_food_reviews <- inner_join(fast_food_reviews,business)
+#fast_food_reviews <- inner_join(fast_food_reviews,business)
 #calculate review count
-fast_food_reviews_count <- fast_food_reviews%>%group_by(business_id)%>%dplyr::summarise(review_count=sum(review_count))
+#fast_food_reviews_count <- fast_food_reviews%>%group_by(business_id)%>%dplyr::summarise(review_count=sum(review_count))
 #join the review count
-review_business <- left_join(review_business,fast_food_reviews_count)
+#review_business <- left_join(review_business,fast_food_reviews_count)
+##################################################
+##########Load Data#############
+##################################################
+business_tag <- c("McDonald's","Burger King","Five Guys","Wendy's","Shake Shack")
+review_business <- read_csv("review_business.csv")
+fast_food_reviews <- read_csv("fast_food_reviews.csv")
+####load coefficients and tf_idf data########
+coefficients <- read_csv("coefficients.csv")
+review_tf_idf <- read_csv("review_tf_idf.csv")
 server = function(input, output, session) {
   
   #choose one of the five restaurant
@@ -88,9 +94,37 @@ server = function(input, output, session) {
     }
         ggplot(data=pass,aes(x=stars,fill="red"))+geom_histogram()
   })
-  #output the bigram plot
+  #output the single word plot
+  #output Top 20 positive and negative words
   output$plot2 <- renderPlot({
-    
+    # Obtain the coefficients corresponding to specific restaurant
+    restaurant_coefficients <- inner_join(coefficients,review_tf_idf %>% filter(name==input$restaurant)) %>% mutate(score=coef*tf)
+    # Top 30 positive and negative words
+    plot(restaurant_coefficients %>%
+           top_n(30, abs(score)) %>%
+           mutate(word = reorder(word, score)) %>%
+           head(input$n) %>%
+           ggplot(aes(word, score, fill = score > 0)) +
+           geom_col(show.legend = FALSE) +
+           labs(y = "score", x = "word", title = input$restaurant) +
+           theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+           coord_flip())
+  })
+  
+  
+  
+  #output the bigram plot
+  output$plot3 <- renderPlot({
+    mystopwords <- tibble(word = c("bk", "mcdonald", "thru",
+                                   "morning", "breakfast",
+                                   "burgerking", "soul",
+                                   "xt", "snow", "passenger",
+                                   "q", "concrete", "satisfrie", "cle",
+                                   "nice", "burger", "love", "perfect", "lot",
+                                   "super", "fine", "pleasant", "food", "worst", "thi",
+                                   "king", "bad", "eat", "told", "reivew", "regular",
+                                   "add", "talk", "heard", "suck", "lunch", "shame",
+                                   "guy", "wendy"))
     (reviews_bigram_tf_idf <- fast_food_reviews %>%
        unnest_tokens(bigram, text, token = "ngrams", n = 2) %>%
        separate(bigram, c("word1", "word2"), sep = " ") %>%
@@ -104,13 +138,13 @@ server = function(input, output, session) {
        arrange(desc(tf_idf))
     )
     
-    d <- reviews_bigram_tf_idf %>% filter(name==input$restaurant)%>%
+    d <- reviews_bigram_tf_idf %>%
       group_by(name) %>%
       slice_max(tf_idf, n=input$n) %>%
       ungroup() 
     
     #draw the plot
-    ggplot(data=d,aes(tf_idf, fct_reorder(bigram, tf_idf), fill = name)) +
+    ggplot(data=d%>% filter(name==input$restaurant),aes(tf_idf, fct_reorder(bigram, tf_idf), fill = name)) +
       geom_col(show.legend = FALSE) +
       facet_wrap(~name, ncol = 2, scales = "free") +
       labs(x = "tf-idf", y = NULL)
