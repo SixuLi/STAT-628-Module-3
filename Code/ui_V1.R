@@ -1,55 +1,21 @@
 #import packages
 library(shiny)
-library(shinydashboard)
-library(leafletCN)
 library(leaflet)
-library(openxlsx)
 library(DT)
 library(dplyr)
-library(ggradar)
-library(reshape)
-library(recharts)
-library(plyr)
 library(readr)
 
 #set working directory
 #setwd("")
 
-# import data
-business <- read_csv("business_city.csv")
-# set restaurant name
+#############################################
+####load data################################
 business_tag <- c("McDonald's","Burger King","Five Guys","Wendy's","Shake Shack")
-# choose business name 
-business <- business[business$name%in%business_tag,]
-# choose variable
-business <- business %>%
-  select(business_id, name, address, city, state, postal_code,
-         stars, review_count, is_open, categories,longitude,latitude)
-# The result of business data
-review_business <- business
-
-#######Find origin text#######################
-mystopwords <- tibble(word = c("bk", "mcdonald", "thru",
-                               "morning", "breakfast",
-                               "burgerking", "soul",
-                               "xt", "snow", "passenger",
-                               "q", "concrete", "satisfrie", "cle",
-                               "nice", "burger", "love", "perfect", "lot",
-                               "super", "fine", "pleasant", "food", "worst", "thi",
-                               "king", "bad", "eat", "told", "reivew", "regular",
-                               "add", "talk", "heard", "suck", "lunch", "shame",
-                               "guy", "wendy"))
-#import data
-fast_food_reviews <- read_csv("review_city.csv") 
-#choose business id
-fast_food_reviews <- fast_food_reviews[fast_food_reviews$business_id%in%business$business_id,] 
-#join business name
-fast_food_reviews <- inner_join(fast_food_reviews,business)
-#calculate review count
-fast_food_reviews_count <- fast_food_reviews%>%group_by(business_id)%>%dplyr::summarise(review_count=sum(review_count))
-#join the review count
-review_business <- left_join(review_business,fast_food_reviews_count)
-
+review_business <- read_csv("review_business.csv")
+fast_food_reviews <- read_csv("fast_food_reviews.csv")
+####load coefficients and tf_idf data########
+coefficients <- read_csv("coefficients.csv")
+review_tf_idf <- read_csv("review_tf_idf.csv")
 
 
 ui = shinyUI(
@@ -72,10 +38,11 @@ ui = shinyUI(
                                            mainPanel(
                                              #show the result in each panel
                                              tabsetPanel(tabPanel("Data Illustrate",DTOutput("DT")),tabPanel("Distribution of Stars",plotOutput("plot1")),
-                                                         tabPanel("The Plot of Word Frequency",sliderInput("n","Please Select Number n:",min=1,max=20,value=1),plotOutput("plot2")),
+                                                         tabPanel("The Plot of Word Frequency",fluidPage(sliderInput("n","Please Select Number n:",min=1,max=20,value=1),
+                                                                            column(6,plotOutput("plot2",width="100%", height= "600px")),
+                                                                            column(6,plotOutput("plot3",width="100%", height= "600px")))),
                                                          tabPanel("Burger Chains Map",
                                                                   leafletOutput("fast_food_map", width="100%", height= "700px")
                                                          ))
                                            )))))
-
 
