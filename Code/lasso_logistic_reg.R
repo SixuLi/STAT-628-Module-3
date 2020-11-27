@@ -1,4 +1,4 @@
-source("data_preprocessing.R")
+source("Code/data_preprocessing.R")
 
 # Regularized logistic regression
 
@@ -53,3 +53,11 @@ Lasso_test(reviews.lasso.glm, data_test)
 tmp_coeffs <- coef(reviews.lasso.glm, s = "lambda.min")
 lasso_coefficients <- data.frame(word = tmp_coeffs@Dimnames[[1]][tmp_coeffs@i + 1],
                                  coef = tmp_coeffs@x)
+
+
+# Check significance
+significance <- fixedLassoInf(x_train, as.numeric(y_train) - 1, 
+                              beta = coef(reviews.lasso.glm, s = "lambda.min"), 
+                              lambda = reviews.lasso.glm$lambda, family = "binomial")
+
+names(significance$vars)[significance$pv < 0.1] 
