@@ -149,7 +149,20 @@ server = function(input, output, session) {
       facet_wrap(~name, ncol = 2, scales = "free") +
       labs(x = "tf-idf", y = NULL)
   })
-  
+  #suggestion  
+  output$d <- renderUI({
+    switch(input$restaurant,
+           "McDonald's"= h5("Suggestion of McDonald's: Please improve service speed and enhence work efficiency. 
+                            Top Tags: Quarter Pounder,Happy Meal,Egg MCMuffin"),
+           "Burger King"= h5("Suggestion of Burger King: Please keep food warm without overcook and avoid sending wrong meal and wrong tempertaure. 
+                             Top Tags: Double Whopper, Pretzel Bun, Onion Rings "),
+           "Five Guys"= h5("Suggestion of Five Guys: Please improve quality of bacon and notice the refund service. 
+                           Top Tags: Guys Burgers, Cajun Fries"),
+           "Wendy's"= h5("Suggestion of  Wendy's: Please improve service speed and attitude. PLease provide fresh chicken. Top Tags:Dave Thomas, Spicy Chicken"),
+           "Shake Shack"= h5("Suggestion of Shake Shack: Please to increase the quantity demand for fries and speed up; 
+                             Top Tags: Shake Shack, Strawberry Shake, Chessy Fries "))
+  })
+
   #draw the map
   output$fast_food_map <- renderLeaflet({
     
