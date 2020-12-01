@@ -37,17 +37,11 @@ visualize <- function(restaurant_name, coefficients) {
 
 # McDonald's 
 
-# Coefficients from logistic regression
-visualize("McDonald's", coefficients)
-
 # Coefficients from regularized logistic regression
 visualize("McDonald's", lasso_coefficients)
 
 
 # Burger King
-
-# Coefficients from logistic regression
-visualize("Burger King", coefficients)
 
 # Coefficients from regularized logistic regression
 visualize("Burger King", lasso_coefficients)
@@ -55,26 +49,17 @@ visualize("Burger King", lasso_coefficients)
 
 # Five Guys
 
-# Coefficients from logistic regression
-visualize("Five Guys", coefficients)
-
 # Coefficients from regularized logistic regression
 visualize("Five Guys", lasso_coefficients)
 
 
 # Wendy's
 
-# Coefficients from logistic regression
-visualize("Wendy's", coefficients)
-
 # Coefficients from regularized logistic regression
 visualize("Wendy's", lasso_coefficients)
 
 
 # Shake Shack
-
-# Coefficients from logistic regression
-visualize("Shake Shack", coefficients)
 
 # Coefficients from regularized logistic regression
 visualize("Shake Shack", lasso_coefficients)

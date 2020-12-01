@@ -1,10 +1,35 @@
+### STAT628 module3 group 20 ###
+### team members ###
+# Jiayi Shen jshen226@wisc.edu (JS)
+# Junxia Zhao jzhao347@wisc.edu (JZ)
+# Sixu Li sli739@wisc.edu (SL)
+
+##################### Introduction #####################
+# In this module, we aim to do some sentiment analysis on five popular burger chains 
+# based on some NLP techniques and machine learning method. 
+
+# The task can be seperated into the following steps:
+# 1. Data preprocessing (corresponding to file data_preprocessing.R)
+# 2. Model training and testing (corresponding to file lasso_logistic_reg.R)
+# 3. Visualization (corresponding to file visualization.R)
+########################################################
+
+
+##################### Contributions #####################
+# 1. Data preprocessing: JS and SL created and maintained, JZ revised
+# 2. Model training and testing: SL created and maintained, JS and JZ revised
+# 3. Visualization: JZ created and maintained, SL and JS revised
+# 4. Shiny app: JZ and JS created and maintained, SL revised.
+########################################################
+
+
+
+
 library(dplyr)
 library(ggplot2)
 library(stringr)
-#library(lubridate)
 library(tidytext)
 library(DT)
-#library(leaflet)
 library(textcat)
 library(forcats)
 library(pacman)
@@ -13,8 +38,6 @@ library(SnowballC)
 library(glmnet)
 library(jsonlite)
 library(caret)
-#p_load_gh('hrbrmstr/pluralize')
-#p_load(quanteda)
 
 rm(list = ls())
 
@@ -22,8 +45,6 @@ fillColor = "#FFA07A"
 fillColor2 = "#F1C40F"
 
 # Read the data
-# reviews <- read_csv('Data/review_city.csv')
-# business <- read_csv('Data/business_city.csv')
 reviews <- stream_in(file("Data/review_city.json"), pagesize = 272024)
 business <- stream_in(file("Data/business_city.json"), pagesize = 36327)
 

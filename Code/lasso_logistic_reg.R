@@ -1,4 +1,5 @@
 source("Code/data_preprocessing.R")
+library(selectiveInference)
 
 # Regularized logistic regression
 
@@ -56,6 +57,9 @@ lasso_coefficients <- data.frame(word = tmp_coeffs@Dimnames[[1]][tmp_coeffs@i + 
 
 
 # Check significance
+x_train <- model.matrix(label~., data_train)[,-1]
+y_train <- data_train$label
+
 significance <- fixedLassoInf(x_train, as.numeric(y_train) - 1, 
                               beta = coef(reviews.lasso.glm, s = "lambda.min"), 
                               lambda = reviews.lasso.glm$lambda, family = "binomial")
