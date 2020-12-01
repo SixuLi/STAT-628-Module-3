@@ -7,7 +7,7 @@ In this project, based on Yelp data set, we intended to use some NLP techniques 
 - Summary folder contains our final report.
 
 # Shiny APP
-
+- [Visualizations and Suggestions](https://jzhao55.shinyapps.io/fast_food_project/)
 
 # Authors
 - Jiayi Shen - (jshen226@wisc.edu)
