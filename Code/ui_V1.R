@@ -40,7 +40,7 @@ ui = shinyUI(
                                              tabsetPanel(tabPanel("Data Illustrate",DTOutput("DT")),tabPanel("Distribution of Stars",plotOutput("plot1")),
                                                          tabPanel("The Plot of Word Frequency",fluidPage(sliderInput("n","Please Select Number n:",min=1,max=20,value=1),
                                                                             column(6,plotOutput("plot2",width="100%", height= "600px")),
-                                                                            column(6,plotOutput("plot3",width="100%", height= "600px")))),
+                                                                            column(6,plotOutput("plot3",width="100%", height= "600px")),uiOutput("d"))),
                                                          tabPanel("Burger Chains Map",
                                                                   leafletOutput("fast_food_map", width="100%", height= "700px")
                                                          ))
