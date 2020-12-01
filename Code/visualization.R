@@ -22,7 +22,17 @@ visualize <- function(restaurant_name, coefficients) {
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
     coord_flip())
   
-  
+    
+  # Top 20 negative words
+  plot(restaurant_coefficients %>% 
+         arrange(score) %>% 
+         head(20) %>%
+         ggplot(aes(x=reorder(word,abs(score)),y=abs(score),fill="red")) +  
+         geom_col(show.legend = FALSE) + 
+         labs(y = "score", x = "word", title = restaurant_name) + 
+         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+         coord_flip())
+
   # Top 30 positive and negative words
   plot(restaurant_coefficients %>%
     top_n(30, abs(score)) %>%
@@ -33,6 +43,9 @@ visualize <- function(restaurant_name, coefficients) {
     labs(y = "score", x = "word", title = restaurant_name) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
     coord_flip())
+}
+  #star distribution of each restaurant
+  ggplot(data=review_business%>%select(business_id,name,stars),aes(x=stars,fill="red"))+ facet_wrap(~name, ncol = 2, scales = "free") +geom_histogram()
 }
 
 # McDonald's 
