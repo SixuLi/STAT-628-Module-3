@@ -1,5 +1,4 @@
 source("Code/data_preprocessing.R")
-source("Code/logistic_reg.R")
 source("Code/lasso_logistic_red.R")
 library(tidyverse)
 
